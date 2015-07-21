@@ -50,6 +50,7 @@
                     <h2>Nameko</h2>
                     <aside class="notes">
                         <ul>
+                            <li>Welcome everyone, thank you for coming</li>
                             <li>Talk is about <strong>microservices</strong>.</li>
                             <li>And <strong>nameko</strong>, an <strong>open-source framework for writing them</strong> in Python</li>
                             <li>Matt Bennett, head of platform engineering at stealth-company; being filmed</li>
@@ -71,7 +72,7 @@
                     <aside class="notes">
                         <ul>
                             <li>In Nov 2014, <strong>Martin Fowler</strong>, <strong>James Lewis</strong> published "microservices"</li>
-                            <li>Considered to be the <strong>seminal</strong> paper</li>
+                            <li>Considered to be the <strong>seminal</strong> paper <strong>on the topic</strong></li>
                             <li>Highly recommend. Accessible, not very long, lots of information</li>
                         </ul>
                         <ul>
@@ -123,9 +124,9 @@
                             <li>In essense: extension of good old fashioned <strong>decoupling and encapsulation</strong>, applied at the <strong>process level</strong>.</li>
                         </ul>
                         <ul>
-                            <li>Forces you to consider the <strong>boundaries of services</strong> or <strong>"seams"</strong> run through application</li>
+                            <li>Forces you to consider the <strong>boundaries of services</strong> or <strong>seams that run</strong> through application</li>
                             <li>Common response to hype: "should be doing that anyway! <strong>just good design</strong>"; which is true</li>
-                            <li>But with microservices, can't be lazy or bend rules e.g. cross-component import; different memory space</li>
+                            <li>But with microservices, can't be lazy or bend rules e.g. cross-component import; not there to import</li>
                             <li><strong>There are also other benefits to using separate processes</strong></li>
                         </ul>
                     </aside>
@@ -137,13 +138,14 @@
                     <aside class="notes">
                         <ul>
                             <li>Primary reason for adopting <strong>any software architecture</strong> is scale</li>
-                            <li>Or rather, <strong>"maintainability at scale"</strong></li>
-                            <li>Not scale as in serving '00s of millions req/sec. Rather in the <strong>complexity of the problem you're trying to solve</strong>.</li>
+                            <li>Or rather, <strong>maintainability at scale</strong></li>
+                            <li>Not scale as in serving '00s of millions req/sec. Rather in the <strong>complexity of the problem you're trying to solve</strong>, the <strong>team solving it</strong></li>
                             <!-- <li>Rumour has it, between log in and check out on Amazon.com, 250 services. onefinestay has ~45.</li> -->
                         </ul>
                         <ul>
                             <li><strong>There is an analogy for this</strong>. Alan Kay (smalltalk, oop) used in 1997 Keynote (video of, was 13 in 1997)</li>
                             <li>It goes like this: if someone asked you to build a doghouse out of wooden planks and nails...</li>
+                            <li>When society starting building massive structures, like cathedrals... used stone arches</li>
                             <li>Lightbulb moment: "architecture" etymology, literally application of arches</li>
                         </ul>
                         <ul>
@@ -192,16 +194,28 @@
                 </section>
 
                 <section>
-                    <h2>Not "Monolithic"</h2>
-                    <aside class="notes">
-                        <ul>
-                            <li>Forgive circular reference</li>
-                            <li>Outside <strong>software architecture</strong>: big, imposing and <strong>impenetrable</strong> (think monolith in 2001)</li>
-                            <li>Microservices: small, nimble, easy to grok.</li>
-                            <li>A <strong>smaller codebase</strong> means shorter on-boarding for new devs</li>
-                            <li>There is <strong>lower cognitive overhead</strong>.It is <strong>inherently more maintainable</strong></li>
-                        </ul>
-                    </aside>
+                    <section>
+                        <h2>Not "Monolithic"</h2>
+                        <aside class="notes">
+                            <ul>
+                                <li>Forgive circular reference; not monolithic</li>
+                                <li>Outside <strong>software architecture</strong>: big, imposing and <strong>impenetrable</strong> (think monolith in 2001)</li>
+                                <li>Microservices: small, nimble, easy to grok.</li>
+                                <li>A <strong>smaller codebase</strong> means shorter on-boarding for new devs</li>
+                                <li>There is <strong>lower cognitive overhead</strong>. It is <strong>inherently more maintainable</strong></li>
+                            </ul>
+                        </aside>
+                    </section>
+                    <section>
+                        <img src="images/monolith.jpg" style="width:100%"/>
+                        <aside class="notes">
+                            <ul>
+                                <li>Microservices: small, nimble, easy to grok.</li>
+                                <li>A <strong>smaller codebase</strong> means shorter on-boarding for new devs</li>
+                                <li>There is <strong>lower cognitive overhead</strong>. It is <strong>inherently more maintainable</strong></li>
+                            </ul>
+                        </aside>
+                    </section>
                 </section>
 
                 <section>
@@ -212,8 +226,9 @@
                             <li>And then there's <strong>conway's law</strong>. ThoughtWorks talk about this a lot.</li>
                             <li>Who's heard of Conway's Law?</li>
                             <li>Chap called Melvin Conway, 1968! Not sure any new ideas on software architecture.</li>
-                            <li>Regular 3-tier application (DB, App Logic, UI); employ <strong>specialists</strong> in these fields.</li>
-                            <li>I have <strong>worked in this kind of team</strong>. App dev peers, talk to every day. UI folks, <strong>different language</strong>. Later of friction. That is conway's law <strong>in action</strong>.</li>
+                            <li>Regular 3-tier application (DB, App Logic, UI); likely employ <strong>specialists</strong> in these fields.</li>
+                            <li>I have <strong>worked in this kind of team</strong>. As member of <strong>middle tier</strong>, would talk to app logic peers every day; <strong>easy to communicate</strong>.</li>
+                            <li>UI folks, <strong>different language</strong>. Later of friction. That is conway's law <strong>in action</strong>.</li>
                             <li>ThoughtWorks recommend: <strong>small, multi-discliplinary team</strong>; separate based on <strong>natural divisions in the org</strong> you're serving</li>
                             <li>Get an app that better reflects the organisation rather than tech boundaries</li>
                         </ul>
@@ -226,8 +241,8 @@
                     <aside class="notes">
                         <ul>
                             <li>Wonderful benefits <strong>all well and good</strong>. What does it <strong>cost</strong>?</li>
-                            <li>Kind of a <strong>grown up</strong> architecture. Have to have a lot of <strong>things in place</strong> before you can make it work for you</li>
-                            <li><strong>Unless of course</strong> you want to end up in the architectural doghouse</li>
+                            <li>Kind of a <strong>grown up</strong> architecture. Have to have a lot of <strong>things in place</strong> before you can make it work for you...</li>
+                            <li><strong>If you want to avoid the architectural doghouse</strong></li>
                         </ul>
                     </aside>
                 </section>
@@ -313,6 +328,7 @@
                             <li>By now you may be <strong>asking yourself whether</strong> microservices are for you. If so here are some <strong>questions to consider</strong></li>
                             <li>Codebase large enough that no one person understands it?</li>
                             <li>Are dev and release cycles slow because of chains of dependent changes?</li>
+                            <li>Do your tests take forever to run?</li>
                             <li>If so you <strong>might be fighting a monolith</strong></li>
                         </ul>
                         <ul>
@@ -350,8 +366,8 @@
                         </ul>
                         <ul>
                             <li>It's <strong>named after the Japanese mushroom</strong>, grow in clusters like this </li>
-                            <li>Kinda like microservices, many individuals making up the whole</li>
-                            <li>Botanist friend, "why do they grow like that?". <strong>He shrugged and said</strong> "Not mush-room?". <strong>True story</strong>. I told him he's a fun-guy</li>
+                            <li>Kinda like microservices, many individuals making up the larger thing</li>
+                            <li>Botanist friend, "why do they grow like that?". <strong>He shrugged and said</strong> "'cause there's not mush-rum?". <strong>True story</strong>. I told him he's a fun-guy</li>
                         </ul>
                     </aside>
                 </section>
@@ -412,7 +428,7 @@ class HelloWorld(object):
     cache = CacheClient()  # dependency declaration
 
     @rpc
-    def greet(self, request, friend):
+    def greet(self, friend):
         greeting = self.cache.get(friend)
 
         if greeting is None:
@@ -448,7 +464,7 @@ class HelloWorld(object):
     cache = CacheClient()
 
     @rpc
-    def greet(self, request, friend):
+    def greet(self, friend):
         print(HelloWorld.cache)  # DependencyProvider
         print(self.cache)        # injected dependency
 
@@ -586,7 +602,7 @@ Broker: b'amqp://guest:guest@localhost'
                             <li><strong>You are likely to need HTTP on the outside of your services, for clients</strong> to communicate with them</li>
                             <li>But for service-to-service interaction (where you control both sides of comms) probably want something different</li>
                             <li>In particular, <strong>pub-sub is a killer app</strong> for microservices</li>
-                            <li>Because all kinds of patterns in distributed systems rely on it</li>
+                            <li>Because <strong>all kinds of patterns in distributed systems rely on it</strong></li>
                         </ul>
                     </aside>
                 </section>
@@ -621,12 +637,15 @@ assert fake_cache.get("Matt") == "Hello Matt!"
                     <aside class="notes">
                         <ul>
                             <li>Nameko also ships with some nice test helpers</li>
-                            <li<strong>>Already seen how injecting dependencies</strong> keeps service interface clean and simple</li>
+                            <li><strong>Already seen how injecting dependencies</strong> keeps service interface clean and simple</li>
                             <li>But it also makes it really easy to <strong>pluck them out</strong> during testing</li>
+                        </ul>
                         <ul>
                             <li>Snippet here, using a helper called <strong>worker_factory</strong>, useful when<strong> unit testing</strong> services.</li>
                             <li>Pass it your service class, get an <strong>instance with deps replaced by mocks</strong>. No real memcache cluster.</li>
                             <li>Exercise methods, verify mocks called appropriately</li>
+                        </ul>
+                        <ul>
                             <li>worker_factory has <strong>another mode of operation</strong> where you can provide an alternative dependency.</li>
                             <li>In this case Mockcache; much nicer interface than a plain mock for this situation; no need to setup return value</li>
                         </ul>
@@ -659,7 +678,7 @@ assert fake_cache.get("Matt") == "Hello Matt!"
                         <ul>
                             <li>In microservices architecture, split your application into services running as independent processes</li>
                             <li>Way to achieve <strong>maintainability at scale</strong>, so you can build <strong>cathedrals of software</strong></li>
-                            <li>And comes with a host of other benefits, like freedom of technology, decoupled release cycles, even team structure <strong>for each component part</strong>.</li>
+                            <li>And comes with a host of other benefits, like freedom of technology, decoupled release cycles, even team structure if you want, <strong>for each component part</strong>.</li>
                         </ul>
                     </aside>
                 </section>
@@ -683,7 +702,9 @@ assert fake_cache.get("Matt") == "Hello Matt!"
                     <aside class="notes">
                         <ul>
                             <li>"Grown up" architecture. Complex, distributed system</li>
-                            <li>Need to automate your DevOps, monitor, analyse and <strong>overall be aware</strong></li>
+                            <li>Need to automate your DevOps, monitor, analyse and <strong>overall be aware</strong> of distributed tradeoffs</li>
+                        </ul>
+                        <ul>
                             <li>But also you can adopt incrementally with a "multi-lith" by adding one or two microservices alongside existing stack</li>
                         </ul>
                     </aside>
@@ -705,7 +726,7 @@ assert fake_cache.get("Matt") == "Hello Matt!"
                     <aside class="notes">
                         <ul>
                             <li>If you want to go on this <strong>microservices adventure</strong>, there is an open-source library that can help</li>
-                            <li><strong>Designed for writing services</strong></li>
+                            <li><strong>Made for writing services</strong></li>
                             <li>Encourages you to write clean, highly testable code</li>
                             <li>Several built-in extensions so it's useful out-of-the-box</li>
                             <li>But is <strong>designed to be extended</strong></li>
@@ -736,12 +757,6 @@ assert fake_cache.get("Matt") == "Hello Matt!"
                             <a href="https://github.com/mattbennett/nameko-europython-demo">https://github.com/mattbennett/nameko-europython-demo</a>
                         </p>
                     </div>
-
-                    <aside class="notes">
-                        <ul>
-                            <li>Lots more to know about nameko. Read the docs, also feel free to contact me or grab me this week</li>
-                        </ul>
-                    </aside>
 
                 </section>
 
