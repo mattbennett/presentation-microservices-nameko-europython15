@@ -1,0 +1,18 @@
+.container .half {
+    width: 50%;
+    float: left;
+}
+
+.container .twothirds {
+    width: 66%;
+    float: left;
+}
+
+.container .third {
+    width: 34%;
+    float: left;
+}
+
+div .sunmary ul {
+    padding: 30px;
+}

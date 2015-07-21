@@ -1,0 +1,787 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+
+        <title>Nameko for Microservices</title>
+
+        <meta name="description" content="A talk for Europython 2015">
+        <meta name="author" content="Matt Bennett">
+
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <link rel="stylesheet" href="css/reveal.min.css">
+        <link rel="stylesheet" href="css/theme/night.css" id="theme">
+        <link rel="stylesheet" href="css/custom.css">
+
+        <!-- For syntax highlighting -->
+        <link rel="stylesheet" href="lib/css/zenburn.css">
+
+        <!-- If the query includes 'print-pdf', include the PDF print sheet -->
+        <script>
+            if( window.location.search.match( /print-pdf/gi ) ) {
+                var link = document.createElement( 'link' );
+                link.rel = 'stylesheet';
+                link.type = 'text/css';
+                link.href = 'css/print/pdf.css';
+                document.getElementsByTagName( 'head' )[0].appendChild( link );
+            }
+        </script>
+
+        <!--[if lt IE 9]>
+        <script src="lib/js/html5shiv.js"></script>
+        <![endif]-->
+    </head>
+
+    <body>
+
+        <div class="reveal">
+
+            <!-- Any section element inside of this container is displayed as a slide -->
+            <div class="slides">
+
+                <section>
+                    <h2>Microservices</h2>
+                    <h2>+</h2>
+                    <h2>Nameko</h2>
+                    <aside class="notes">
+                        <ul>
+                            <li>Talk is about <strong>microservices</strong>.</li>
+                            <li>And <strong>nameko</strong>, an <strong>open-source framework for writing them</strong> in Python</li>
+                            <li>Matt Bennett, head of platform engineering at stealth-company; being filmed</li>
+                            <li>Previously senior engineer at <strong>onefinestay</strong>, where nameko was born.</li>
+                        </ul>
+                        <ul>
+                            <li>How many people know the term microservices?</li>
+                            <li>How many of you did this time <strong>two years ago</strong>? Big difference</li>
+                            <li>Microservices is the <strong>hot new buzzword</strong>, suddenly they seem to be everywhere</li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>History Lesson</h2>
+                    <p>November 2014</p>
+                    <p>Martin Fowler &amp; James Lewis published "microservices"</p>
+                    <p><a href="http://martinfowler.com/articles/microservices.html">http://martinfowler.com/articles/microservices.html</a>
+                    <aside class="notes">
+                        <ul>
+                            <li>In Nov 2014, <strong>Martin Fowler</strong>, <strong>James Lewis</strong> published "microservices"</li>
+                            <li>Considered to be the <strong>seminal</strong> paper</li>
+                            <li>Highly recommend. Accessible, not very long, lots of information</li>
+                        </ul>
+                        <ul>
+                            <li>It's also <strong>very recent</strong>. They didn't invent the term, but gave it a <strong>concrete definition</strong>, <strong>propelled</strong> it into vocabulary</li>
+                            <li>At onefinestay, we discovered the paper and realised it described what we had been building.</li>
+                            <li><strong>This was really exciting</strong>, now we had a common language to share ideas</li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>Definition</h2>
+                    <blockquote class="fragment">Microservice architectural style is an approach to developing a single application as a <strong>suite of small services</strong>, each <strong>running in its own process</strong> and communicating with lightweight mechanisms</blockquote>
+
+                    <aside class="notes">
+                        <ul>
+                            <li>For <strong>uninitiated</strong>, what is the microservices architecture?</li>
+                            <li>Martin Fowler's definition. Read</li>
+                        </ul>
+                    </aside>
+
+                </section>
+
+                <section>
+                    <div class="container">
+                        <h3>Monolith vs Microservices</h3>
+                        <div class="half">
+                            <!-- <h2>Monolith</h2> -->
+                            <ul>
+                                <li>Single process application</li>
+                                <li>e.g. a Django site</li>
+                            </ul>
+                        </div>
+                        <div class="half">
+                            <!-- <h2>Microservices</h2> -->
+                            <ul>
+                                <li>Application divided into "services"</li>
+                                <li>Deployed as separate processes</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <aside class="notes">
+                        <ul>
+                            <li>It's helpful to contrast to a <strong>monolith</strong> - probably the <strong>default way</strong> to build an app - <strong>as a single process</strong></li>
+                            <li>Typical django site <strong>good example</strong>. Would <strong>probably separate your site</strong> into "apps", but they run in the same <strong>process and memory space</strong></li>
+                            <li><strong>Whereas</strong> in microservices, your "apps" become entirely <strong>separate programs</strong></li>
+                        </ul>
+                        <ul>
+                            <li>In essense: extension of good old fashioned <strong>decoupling and encapsulation</strong>, applied at the <strong>process level</strong>.</li>
+                        </ul>
+                        <ul>
+                            <li>Forces you to consider the <strong>boundaries of services</strong> or <strong>"seams"</strong> run through application</li>
+                            <li>Common response to hype: "should be doing that anyway! <strong>just good design</strong>"; which is true</li>
+                            <li>But with microservices, can't be lazy or bend rules e.g. cross-component import; different memory space</li>
+                            <li><strong>There are also other benefits to using separate processes</strong></li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>Reasons to Adopt Microservices</h2>
+                    <p>"Maintainability at Scale"</p>
+                    <aside class="notes">
+                        <ul>
+                            <li>Primary reason for adopting <strong>any software architecture</strong> is scale</li>
+                            <li>Or rather, <strong>"maintainability at scale"</strong></li>
+                            <li>Not scale as in serving '00s of millions req/sec. Rather in the <strong>complexity of the problem you're trying to solve</strong>.</li>
+                            <!-- <li>Rumour has it, between log in and check out on Amazon.com, 250 services. onefinestay has ~45.</li> -->
+                        </ul>
+                        <ul>
+                            <li><strong>There is an analogy for this</strong>. Alan Kay (smalltalk, oop) used in 1997 Keynote (video of, was 13 in 1997)</li>
+                            <li>It goes like this: if someone asked you to build a doghouse out of wooden planks and nails...</li>
+                            <li>Lightbulb moment: "architecture" etymology, literally application of arches</li>
+                        </ul>
+                        <ul>
+                            <li><strong>How can microservices help you achieve maintainability at scale</strong>?</li>
+                            <li>Already said it's about decoupling and isolation. <strong>What else?</strong></li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>Independently Deployable</h2>
+                    <aside class="notes">
+                        <ul>
+                            <li>As <strong>separate programs</strong>, they are <strong>independently deployable</strong></li>
+                            <li>Separate <strong>release cycles</strong>, <strong>deployment processes</strong> for different part of application</li>
+                            <li>Guardian newspaper: microservices allowed them start using continual delivery in <strong>some parts</strong>, without risking</li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>Independently Scalable</h2>
+                    <aside class="notes">
+                        <ul>
+                            <li><strong>Separate programs</strong> are also <strong>independently scalable</strong></li>
+                            <li>Now I <strong>do</strong> '00s of millions of req/sec</li>
+                            <li>To scale a monolith you have <strong>no choice</strong> but to deploy another instance</li>
+                            <li><strong>You have to replicate the whole thing</strong></li>
+                            <li>Microservices are <strong>much more granular</strong>; therefore composable</li>
+                            <li>e.g. CPU-bound service, deploy more of these to more CPUs <strong>without having to drag the rest</strong> of the application along</li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>Freedom of Technology</h2>
+                    <aside class="notes">
+                        <ul>
+                            <li>Being <strong>good pythonistas</strong>, sure we all want to use Python3</li>
+                            <li>Sometimes get stuck using old lib, not updated. Monolith, <strong>lowest common denominator</strong></li>
+                            <li>Microservices use most suitable interpreter: py2, py3, pypy. Up to you.</li>
+                            <!-- <li>Use a different kind of database? Now it's not a dependency for your entire application</li> -->
+                            <li>Not too loudly at <strong>python conference</strong>, but extends to language. Experiment with <strong>functional</strong>, write service in that lang</li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>Not "Monolithic"</h2>
+                    <aside class="notes">
+                        <ul>
+                            <li>Forgive circular reference</li>
+                            <li>Outside <strong>software architecture</strong>: big, imposing and <strong>impenetrable</strong> (think monolith in 2001)</li>
+                            <li>Microservices: small, nimble, easy to grok.</li>
+                            <li>A <strong>smaller codebase</strong> means shorter on-boarding for new devs</li>
+                            <li>There is <strong>lower cognitive overhead</strong>.It is <strong>inherently more maintainable</strong></li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>Conway's Law</h2>
+                    <blockquote class="fragment">organizations which design systems... are constrained to produce designs which are copies of the communication structures of these organizations</blockquote>
+                    <aside class="notes">
+                        <ul>
+                            <li>And then there's <strong>conway's law</strong>. ThoughtWorks talk about this a lot.</li>
+                            <li>Who's heard of Conway's Law?</li>
+                            <li>Chap called Melvin Conway, 1968! Not sure any new ideas on software architecture.</li>
+                            <li>Regular 3-tier application (DB, App Logic, UI); employ <strong>specialists</strong> in these fields.</li>
+                            <li>I have <strong>worked in this kind of team</strong>. App dev peers, talk to every day. UI folks, <strong>different language</strong>. Later of friction. That is conway's law <strong>in action</strong>.</li>
+                            <li>ThoughtWorks recommend: <strong>small, multi-discliplinary team</strong>; separate based on <strong>natural divisions in the org</strong> you're serving</li>
+                            <li>Get an app that better reflects the organisation rather than tech boundaries</li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>Implications of Microservices</h2>
+                    <p>"You must be this tall to ride"</p>
+                    <aside class="notes">
+                        <ul>
+                            <li>Wonderful benefits <strong>all well and good</strong>. What does it <strong>cost</strong>?</li>
+                            <li>Kind of a <strong>grown up</strong> architecture. Have to have a lot of <strong>things in place</strong> before you can make it work for you</li>
+                            <li><strong>Unless of course</strong> you want to end up in the architectural doghouse</li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>DevOps overhead</h2>
+                    <p>"Post CD Architecture"</p>
+                    <aside class="notes">
+                        <ul>
+                            <li><strong>There is a devops overhead</strong></li>
+                            <li>Increasing by <strong>10</strong> or <strong>20</strong> times things to be <strong>built, deployed, looked after</strong></li>
+                            <li>Massive burdon for ops. <strong>Only way to cope</strong>, leverage automation - tests, deployment, machine management</li>
+                            <li>Another insight from ThoughtWorks: Microservices are <strong>"post-CD"</strong>.</li>
+                            <li>What they mean is: <strong>enabled by automation</strong>, without which impossible</li>
+                            <li>I think, this is why microserivices <strong>seem to surround us</strong> now. Same <strong>good ideas of</strong> decoupling and isolation, <strong>new dimension</strong> enabled by devops tech</li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>Domain Knowledge</h2>
+                    <aside class="notes">
+                        <ul>
+                            <li>As well as devops overhead, you must <strong>embrace the domain</strong> in which you're operating</li>
+                            <li>Sufficient complex app, should be doing anyway; worked places that didn't</li>
+                            <li>Wht I mean is, you have to really understand the <strong>business requirements</strong>. i.e. the problem you're trying to <strong>solve for your org</strong></li>
+                            <li><strong>So you can decide where to draw the lines between services</strong></li>
+                            <li>You can't just <strong>build a webapp and</strong> tack things on. Microservices force you to do it upfront. </li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>Decentralisation</h2>
+                    <p>ACID → BASE</p>
+                    <ul class="fragment">
+                        <li>Basically Available</li>
+                        <li>Soft-state</li>
+                        <li>Eventually Consistent</li>
+                    </ul>
+                    <aside class="notes">
+                        <ul>
+                            <li>Then there's the <strong>decentralised aspect</strong></li>
+                            <li>No longer have a <strong>single source of truth</strong> like the traditional database layer</li>
+                            <li>Relinquish ACID guarantees, <strong>embrase BASE</strong>. Which stands for...</li>
+                            <li>Really awkward backronym; good chemistry joke</li>
+                        </ul>
+                        </ul>
+                            <li><strong>What this means</strong>, is you can't apply transactions across calls to multiple services</li>
+                            <li>Instead you apply it in one place and wait for it to <strong>eventually be reflected</strong> in the other places</li>
+                            <li>OFS mistake: abstract calendaring service, called by others. Kind of a rookie error. Explicitly delete. Race condition.</li>
+                            <li><strong>Decentralised aspect means you have to think about these things</strong></li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>Complexity</h2>
+                    <aside class="notes">
+                        <ul>
+                            <li>Be aware you're <strong>introducing complexity</strong></li>
+                            <li>Collection of microserices fundamentally more complex than a monolith</li>
+                            <li>More moving parts, connected by a <strong>network. Inherently less reliable</strong> than in-memory calls</li>
+                        </ul>
+                        <ul>
+                            <li>In a complex system, <strong>failures rarely exactly one reason</strong></li>
+                            <li>Usually <strong>commulative effect</strong>: network slows down, backlog of requests, combined with recent code change, out of disk space</li>
+                            <li>To <strong>mitigate</strong>, you need <strong>monitoring and telemetry. And analysis</strong> of the data that generates</li>
+                            <li>So you can <strong>figure out what went wrong</strong> (preferably before)</li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>Are Microservices for Me?</h2>
+                    <ul class="fragment">
+                        <li>Are you fighting a monolith?</li>
+                        <li>Are you ready to build a distributed system?</li>
+                    </ul>
+
+                    <aside class="notes">
+                        <ul>
+                            <li>By now you may be <strong>asking yourself whether</strong> microservices are for you. If so here are some <strong>questions to consider</strong></li>
+                            <li>Codebase large enough that no one person understands it?</li>
+                            <li>Are dev and release cycles slow because of chains of dependent changes?</li>
+                            <li>If so you <strong>might be fighting a monolith</strong></li>
+                        </ul>
+                        <ul>
+                            <li>If that is the case, are you ready to <strong>support a distributed system</strong>?</li>
+                            <li>Are you <strong>leveraging automation</strong> for tests, deployment + machine mgt?</li>
+                            <li>Do you have suffient monitoring and analysis in place?</li>
+                        </ul>
+                        <ul>
+                            <li>If your answers are <strong>"yes" and "no", fear not</strong>. Maybe you can build a multi-lith</li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>What About A Multi-lith?</h2>
+                    <p>"Sliding Scale"</p>
+
+                    <aside class="notes">
+                        <ul>
+                            <li>There is a <strong>sliding scale</strong> between tens of entirely independent services, and a single monolith</li>
+                            <li>You may choose to augment your existing monolith with <strong>one or two satelite micoservices</strong>: multi-lith (not sure it'll stick)</li>
+                            <li>This way, <strong>some of the benefits</strong> (diff interpreter, try out CD) without most of the cost</li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>Nameko</h2>
+                    <img src="images/nameko.jpg"/>
+                    <blockquote>A microservices framework that lets service developers concentrate on application logic and encourages testability.</blockquote>
+                    <aside class="notes">
+                        <ul>
+                            <li>Assuming we're all <strong>emboldened and ready</strong> to embrace microservices (or a multilith). Talk about nameko</li>
+                            <li>Open source (apache 2) framework <strong>designed for writing microservices</strong></li>
+                        </ul>
+                        <ul>
+                            <li>It's <strong>named after the Japanese mushroom</strong>, grow in clusters like this </li>
+                            <li>Kinda like microservices, many individuals making up the whole</li>
+                            <li>Botanist friend, "why do they grow like that?". <strong>He shrugged and said</strong> "Not mush-room?". <strong>True story</strong>. I told him he's a fun-guy</li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>Nameko Concepts</h2>
+                    <ul>
+                        <li>Entrypoints</li>
+                        <ul>
+                            <li>To interact with a service</li>
+                        </ul>
+                        <li>Dependencies</li>
+                        <ul>
+                            <li>For the service to interact with external things</li>
+                        </ul>
+                    </ul>
+                    <aside class="notes">
+                        <ul>
+                            <li>Couple of <strong>important concepts</strong> that I need to introduce to <strong>explain design principals</strong></li>
+                            <li>Entrypoints: how you <strong>request something</strong> from the service or <strong>get it to do something</strong>; its interface/boundary</li>
+                            <li>Dependencies: how the service <strong>talks to something external</strong> that it may need to communicate with e.g. database, other serv</li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>Example I</h2>
+                    <pre>
+                        <code class="python">
+class HelloWorld(object):
+    name = “hello”
+
+    @http("GET", "/greet/&lt;string:friend&gt;")
+    def greet(self, friend):
+        return “Hello {}!”.format(friend)
+                        </code>
+                    </pre>
+                    <p>
+                        <a href="https://github.com/mattbennett/nameko-europython-demo">https://github.com/mattbennett/nameko-europython-demo</a>
+                    </p>
+                    <aside class="notes">
+                        <ul>
+                            <li><strong>Jump into some code</strong>. Code in the following examples is in a repo</li>
+                            <li><strong>Nameko service is written as a python class</strong></li>
+                            <li>Has a <strong>name, declared</strong> with name attr. Has some business logic in methods</li>
+                            <li>Methods are <strong>exposed with an entrypoint</strong>. http decorator c<strong>alls the greet method</strong> on GET req to URL.</li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>Example II</h2>
+                    <pre>
+                        <code class="python">
+class HelloWorld(object):
+    name = “hello”
+
+    cache = CacheClient()  # dependency declaration
+
+    @rpc
+    def greet(self, request, friend):
+        greeting = self.cache.get(friend)
+
+        if greeting is None:
+            greeting = “Hello {}!”.format(friend)  # expensive
+            self.cache.put(friend, greeting)
+
+        return greeting
+                        </code>
+                    </pre>
+                    <aside class="notes">
+                        <ul>
+                            <li>Let's expand the example. Pretend for a minute <strong>string formatting is expensive; cache greetings</strong></li>
+                            <li>Also changed the entrypoint to a <strong>Remote Procedure Call impl</strong></li>
+                        </ul>
+                        <ul>
+                            <li><strong>First thing to notice</strong>: Business logic unchanged by entrypoint change.</li>
+                            <li>We've added logic to deal with the cache, but it's isolated from anything to do with HTTP or RPC</li>
+                            <li>In other words: declarative change, no impact on procedural code in the method</li>
+                        </ul>
+                        <ul>
+                            <li>Second thing to point out: line "cache = CacheClient" is <strong>declaring a dependency</strong></li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>Dependency Injection</h2>
+                    <pre>
+                        <code class="python">
+class HelloWorld(object):
+    name = “hello”
+
+    cache = CacheClient()
+
+    @rpc
+    def greet(self, request, friend):
+        print(HelloWorld.cache)  # DependencyProvider
+        print(self.cache)        # injected dependency
+
+        greeting = self.cache.get(friend)
+
+        if greeting is None:
+            greeting = “Hello {}!”.format(friend)  # expensive
+            self.cache.set(friend, greeting)
+
+        return greeting
+                         </code>
+                    </pre>
+                    <pre>
+                        <code class="python">
+&lt;CacheClient [unbound] at 0x10cbb2750&gt;    # DependencyProvider
+&lt;memcache.Client object at 0x10cbd25d0&gt;   # injected dependency
+                         </code>
+                    </pre>
+                    <aside class="notes">
+                        <ul>
+                            <li>Dependencies are special. You <strong>declare them on the service class</strong></li>
+                            <li>But the <strong>class level attribute</strong> is different from the <strong>instance level attribute</strong> that the method <strong>sees when it executes</strong></li>
+                            <li>That's because the DependencyProvider, which is the <strong>declaration of a dependency</strong>, injects the <strong>actual dependency at runtime</strong></li>
+                        </ul>
+                        <ul>
+                            <li>Hack our method to print, <strong>we see that they are different</strong>. One is the DependencyProvider. The other is actually a <strong>memcache.Client, which the method uses</strong> to access the cache</li>
+                            <li>Using dependency injection means <strong>only the relevant interface</strong> is exposed to the service method (and dev)</li>
+                            <li>All the "plumbing" of that dep like <strong>managing a connection</strong> pool or <strong>handing reconnections</strong> is hidden away
+                        </ul>
+                  </aside>
+                </section>
+
+<!--
+                <section>
+                    <h2>Nameko CLI</h2>
+                    <pre>
+                        <code class="shell">
+$ nameko run hello_world
+starting services: hello
+Connected to amqp://guest:**@127.0.0.1:5672//
+                        </code>
+                    </pre>
+                    <pre>
+                        <code class="python">
+$ nameko shell
+Nameko Python 3.4.3 (default, Jul  6 2015, 15:35:13)
+[GCC 4.2.1 Compatible Apple LLVM 6.1.0 (clang-602.0.53)] shell on darwin
+Broker: b'amqp://guest:guest@localhost'
+>>> n.rpc.hello.greet("Matt")
+'Hello Matt!'
+                        </code>
+                    </pre>
+                    <aside class="notes">
+                        <ul>
+                            <li>Ships with CLI for running &amp; interacting with</li>
+                            <li>Give "run" a module containing service classes, will host</li>
+                            <li>nameko shell command will give you a REPL to interact with running services</li>
+                        </ul>
+                    </aside>
+                </section>
+ -->
+
+
+<!--
+                <section>
+                    <h2>Container Process</h2>
+                    <div class="container">
+                        <div class="third">
+                            <ol style="margin-top: 20px">
+                                <li>Entrypoint "fires"</li>
+                                <li>Worker created</li>
+                                <li>Dependencies injected</li>
+                                <li>Execute method</li>
+                                <li>Discard worker</li>
+                            </ol>
+                        </div>
+                        <div class="twothirds" style="padding-top: 35px">
+                            <pre class="fragment"><code class="python" data-trim>
+                                worker_instance = HelloService()
+                            </code></pre>
+                            <pre class="fragment"><code class="python" data-trim>
+                                worker_instance.cache = HelloService.CacheClient.inject()
+                            </code></pre>
+                            <pre class="fragment"><code class="python" data-trim>
+                                result = worker_instance.hello(name)
+                            </code></pre>
+                            <pre class="fragment"><code class="python" data-trim>
+                                del worker_instance
+                            </code></pre>
+                        </div>
+                    </div>
+                    <aside class="notes">
+                        <ul>
+                            <li>Someone calls the 'hello' method over RPC, and the entrypoint fires</li>
+                            <li>Python code on the right roughly analagous to container</li>
+                            <li>Container creates a worker by instantiating the service class</li>
+                            <li>Dependency declarations replaced with injections, provided by the dependency implementation</li>
+                            <li>So inside hello() method, ``self.database`` is a real database session (alluded to in the previous slide)</li>
+                            <li>The worker only lives for one entrypoint call; you can't save state onto 'self'</li>
+                        </ul>
+                    </aside>
+                </section>
+
+ -->
+
+                <section>
+                    <h2>Extensible</h2>
+                    <div class="fragment">
+                        <p>"Built-in" Extensions</p>
+                        <ul>
+                            <li>HTTP GET &amp; POST</li>
+                            <li>AMQP RPC</li>
+                            <li>AMQP Pub-Sub</li>
+                            <li>Timer</li>
+                            <li>Websockets (experimental)</li>
+                        </ul>
+                    </li>
+                    <aside class="notes">
+                        <ul>
+                            <li>Emphasis on entrypoints and dependencies make nameko <strong>very extensible</strong></li>
+                            <li>All Entrypoints and DependencyProviders are implemented as "extensions" to nameko</li>
+                            <li><strong>Even the ones that ship with the library</strong> (which are included so that it's useful out of the box)</li>
+                            <li>Intention is that you <strong>free free build your own</strong>, or through <strong>wonders of open-source</strong>, someone may have already built</li>
+                        </ul>
+                        <ul>
+                            <li>This is the full list of built-in extensions</li>
+                            <li>The <strong>rpc decorator we've seen</strong> is AMQP based RPC implementation for Req-Resp over message bus</li>
+                            <li>There is also <strong>publish-subscribe impl</strong> for <strong>async messaging over AMQP</strong></li>
+                            <li>And timer for cron-like periodic actions and experimental websockets</li>
+                        </ul>
+                        <ul>
+                            <li><strong>Worth explaining why</strong> we have this AMQP stuff in here</li>
+                            <li>HTTP is a natural starting place for microservices. Lots of great, lightweight web frameworks</li>
+                            <li>HTTP is ubiquitous. Great tooling around API explorers, caching and so on</li>
+                            <li><strong>You are likely to need HTTP on the outside of your services, for clients</strong> to communicate with them</li>
+                            <li>But for service-to-service interaction (where you control both sides of comms) probably want something different</li>
+                            <li>In particular, <strong>pub-sub is a killer app</strong> for microservices</li>
+                            <li>Because all kinds of patterns in distributed systems rely on it</li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>Test Helpers</h2>
+                    <pre class="fragment">
+                        <code class="python">
+from mock import call
+from nameko.testing.services import worker_factory
+
+hello_svc = worker_factory(HelloWorld)
+
+hello_svc.cache.get.return_value = None
+
+assert hello_svc.greet("Matt") == "Hello Matt!"
+assert hello_svc.cache.get.call_args_list == [call("Matt")]
+                         </code>
+                    </pre>
+                    <pre class="fragment">
+                        <code class="python">
+import mockcache
+from nameko.testing.services import worker_factory
+
+fake_cache = mockcache.Client()
+hello_svc = worker_factory(HelloWorld, cache=fake_cache)
+
+assert hello_svc.greet("Matt") == "Hello Matt!"
+assert fake_cache.get("Matt") == "Hello Matt!"
+                         </code>
+                    </pre>
+                    <aside class="notes">
+                        <ul>
+                            <li>Nameko also ships with some nice test helpers</li>
+                            <li<strong>>Already seen how injecting dependencies</strong> keeps service interface clean and simple</li>
+                            <li>But it also makes it really easy to <strong>pluck them out</strong> during testing</li>
+                        <ul>
+                            <li>Snippet here, using a helper called <strong>worker_factory</strong>, useful when<strong> unit testing</strong> services.</li>
+                            <li>Pass it your service class, get an <strong>instance with deps replaced by mocks</strong>. No real memcache cluster.</li>
+                            <li>Exercise methods, verify mocks called appropriately</li>
+                            <li>worker_factory has <strong>another mode of operation</strong> where you can provide an alternative dependency.</li>
+                            <li>In this case Mockcache; much nicer interface than a plain mock for this situation; no need to setup return value</li>
+                        </ul>
+<!--                         <ul>
+                            <li>Internals of dependency providers can be tested separately.</li>
+                            <li>If lucky, someone else written and tested for you</li>
+                        </ul> -->
+                        <ul>
+                            <li>There are <strong>similar helpers for integration testing</strong> -- let you run services with <strong>mocked dependencies</strong> and <strong>disabled entrtpoints</strong></li>
+                            <li>So you can limit the integration points between services</li>
+                        </ul>
+                  </aside>
+                </section>
+
+                <section>
+                    <h2>Summary - Microservices</h2>
+                    <ul>
+                        <li>Application divided into services</li>
+                        <li>Running in their own processes</li>
+                        <li>Maintainability at scale</li>
+                        <ul>
+                            <li>Independently deployable</li>
+                            <li>Independently scalable</li>
+                            <li>Freedom of technology</li>
+                            <li>Team structure</li>
+                        </ul>
+                    </ul>
+
+                    <aside class="notes">
+                        <ul>
+                            <li>In microservices architecture, split your application into services running as independent processes</li>
+                            <li>Way to achieve <strong>maintainability at scale</strong>, so you can build <strong>cathedrals of software</strong></li>
+                            <li>And comes with a host of other benefits, like freedom of technology, decoupled release cycles, even team structure <strong>for each component part</strong>.</li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>Summary - Microservices</h2>
+                    <ul>
+                        <li>"Grown up" architecture</li>
+                        <li>Complex, distributed system</li>
+                        <ul>
+                            <li>DevOps automation</li>
+                            <li>Monitoring</li>
+                            <li>Analysis</li>
+                            <li>Awareness</li>
+                        </ul>
+                        <div class="fragment" style="padding-top:20px">
+                            <p>Try it out in a multi-lith</p>
+                        </div>
+                    </ul>
+
+                    <aside class="notes">
+                        <ul>
+                            <li>"Grown up" architecture. Complex, distributed system</li>
+                            <li>Need to automate your DevOps, monitor, analyse and <strong>overall be aware</strong></li>
+                            <li>But also you can adopt incrementally with a "multi-lith" by adding one or two microservices alongside existing stack</li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>Summary - Nameko</h2>
+                    <ul>
+                        <li>Made for microservices</li>
+                        <li>Encourages you to write clean, highly testable code</li>
+                        <li>Useful "built-in" extensions</li>
+                        <li>Designed to be extended</li>
+                    </ul>
+                    <div class="fragment" style="padding-top: 20px">
+                        <div><a href="https://nameko.readthedocs.org">https://nameko.readthedocs.org</a></div>
+                        <div><a href="https://github.com/onefinestay/nameko">https://github.com/onefinestay/nameko</a></div>
+                    </div>
+
+                    <aside class="notes">
+                        <ul>
+                            <li>If you want to go on this <strong>microservices adventure</strong>, there is an open-source library that can help</li>
+                            <li><strong>Designed for writing services</strong></li>
+                            <li>Encourages you to write clean, highly testable code</li>
+                            <li>Several built-in extensions so it's useful out-of-the-box</li>
+                            <li>But is <strong>designed to be extended</strong></li>
+                            <li>Want to know more? Read the docs, fork the repo</li>
+                        </ul>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>Thank you</h2>
+                    <div>
+                        <h6>Nameko</h6>
+                        <p><a href="https://nameko.readthedocs.org">https://nameko.readthedocs.org</a></p>
+                    </div>
+                    <div>
+                        <h6>Me</h6>
+                        <p>
+                            <a href="mailto:matt@bennett.name">matt@bennett.name</a> ~ <a href="http://twitter.com/mattjam">@mattjam</a> ~ <a href="https://github.com/mattbennett">https://github.com/mattbennett</a>
+                        </p>
+                    </div>
+                    <div>
+                        <h6>Presentation</h6>
+                        <p>
+                            <a href="https://mattbennett.github.io/presentation-microservices-nameko-europython15">https://mattbennett.github.io/presentation-microservices-nameko-europython15</a>
+                        </p>
+                        <h6>Demo Files</h6>
+                        <p>
+                            <a href="https://github.com/mattbennett/nameko-europython-demo">https://github.com/mattbennett/nameko-europython-demo</a>
+                        </p>
+                    </div>
+
+                    <aside class="notes">
+                        <ul>
+                            <li>Lots more to know about nameko. Read the docs, also feel free to contact me or grab me this week</li>
+                        </ul>
+                    </aside>
+
+                </section>
+
+            </div>
+
+        </div>
+
+        <script src="lib/js/head.min.js"></script>
+        <script src="js/reveal.min.js"></script>
+
+        <script>
+
+            // Full list of configuration options available here:
+            // https://github.com/hakimel/reveal.js#configuration
+            Reveal.initialize({
+                controls: false,
+                progress: true,
+                history: false,
+                center: true,
+                keyboard: true,
+
+                theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+                transition: Reveal.getQueryHash().transition || 'linear', // default/cube/page/concave/zoom/linear/fade/none
+
+                // Parallax scrolling
+                // parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+                // parallaxBackgroundSize: '2100px 900px',
+
+                // Optional libraries used to extend on reveal.js
+                dependencies: [
+                    { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+                    { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+                    { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+                    { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+                ]
+            });
+
+        </script>
+
+    </body>
+</html>
